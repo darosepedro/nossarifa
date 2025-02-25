@@ -78,6 +78,7 @@
                 if (!selectedNames.includes(name)) {
                     div.classList.add("selected");
                     selectedNames.push(name);
+                    marcarNomeNoGoogle(name);
                 }
             });
             grid.appendChild(div);
@@ -93,6 +94,22 @@
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappURL, "_blank");
         }
+        async function marcarNomeNoGoogle(nome) {
+            const url = "https://script.google.com/macros/s/AKfycbwhtm0lKWOuhZBkyQhTUqK2C4L1AeUXQO8ezvHEyY4qK0pykxrAZzFVM-0ltMv5_KFsMg/exec";
+
+            try {
+                const response = await fetch(`${url}?nome=${encodeURIComponent(nome)}`, {
+                    method: 'POST'
+                });
+                const text = await response.text();
+                alert(text);
+                window.location.reload();  // Atualiza a página
+            } catch (error) {
+                console.error("Erro ao registrar nome:", error);
+                alert("Erro ao registrar nome. Tente novamente.");
+            }
+        }
+
     </script>
 </body>
 
