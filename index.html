@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: red;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .name {
+            padding: 10px;
+            border: 2px solid blue;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .selected {
+            background-color: red;
+            color: white;
+            pointer-events: none;
+        }
+
+        .send-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Escolha um Nome para a Rifa</h1>
+    <div class="grid" id="nameGrid"></div>
+    <button class="send-button" onclick="sendToWhatsApp()">Enviar para WhatsApp</button>
+
+    <script>
+        const names = ["Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana",
+            "Kleber", "Larissa", "Marcos", "Natália", "Otávio", "Patrícia", "Quintino", "Raquel", "Samuel", "Tatiane",
+            "Ubirajara", "Vânia", "Wagner", "Xuxa", "Yara", "Zaqueu", "Amanda", "Beatriz", "Caio", "Diego", "Eliane", "Fabiano",
+            "Gustavo", "Heloísa", "Isabela", "Joaquim", "Karina", "Leonardo", "Mônica", "Nicolas", "Olívia", "Paulo", "Queila",
+            "Rodrigo", "Simone", "Tiago", "Ulisses", "Vitória", "Wallace", "Xênia", "Yuri", "Zélia", "Alberto", "Bárbara", "Cristiano",
+            "Denise", "Emerson", "Fátima", "Gilberto", "Henrique", "Ivana", "João", "Kelly", "Luiz", "Marta", "Nelson", "Orlando",
+            "Priscila", "Quésia", "Rafael", "Silvana", "Tadeu", "Ursula", "Valter", "Wilma", "Xavier", "Yasmin", "Zuleika", "Anderson",
+            "Bianca", "Celso", "Douglas", "Elaine", "Fernando", "Graça", "Hugo", "Íris", "Jefferson", "Kátia", "Luan", "Márcia",
+            "Nádia", "Osvaldo", "Paula", "Queiroz", "Renato", "Sabrina", "Tânia", "Uelinton", "Vinícius"];
+
+        const grid = document.getElementById("nameGrid");
+        let selectedNames = [];
+
+        names.forEach(name => {
+            const div = document.createElement("div");
+            div.classList.add("name");
+            div.innerText = name;
+            div.addEventListener("click", () => {
+                if (!selectedNames.includes(name)) {
+                    div.classList.add("selected");
+                    selectedNames.push(name);
+                }
+            });
+            grid.appendChild(div);
+        });
+
+        function sendToWhatsApp() {
+            const phoneNumber = "5511965912874"; // Substitua pelo número desejado
+            if (selectedNames.length === 0) {
+                alert("Selecione pelo menos um nome antes de enviar.");
+                return;
+            }
+            const message = encodeURIComponent(`Escolhi os seguintes nomes para a rifa: ${selectedNames.map(name => `*${name}*`).join(", ")}`);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(whatsappURL, "_blank");
+        }
+    </script>
+</body>
+
+</html>
