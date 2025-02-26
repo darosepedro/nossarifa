@@ -54,12 +54,35 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
+        /* Estilos para a tela de carregamento */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 
 
 <body>
     <h1>Nossa Rifa</h1>
+    <!-- Tela de carregamento -->
+    <div id="loadingScreen" class="loading-screen">Aguarde...</div>
+
     <div class="grid" id="nameGrid"></div>
     <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
 
@@ -68,6 +91,8 @@
         let selectedNames = [];
 
         async function fetchNames() {
+            const loadingScreen = document.getElementById("loadingScreen");
+            loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
             try {
                 const response = await fetch(`${apiUrl}?action=listarNomes`);
                 const names = await response.json();
@@ -94,6 +119,8 @@
                 });
             } catch (error) {
                 console.error("Erro ao buscar os nomes da rifa:", error);
+            } finally {
+                loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
         }
 
