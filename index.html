@@ -38,6 +38,12 @@
             pointer-events: none;
         }
 
+        .sold {
+            background-color: #d3d3d3;
+            color: black;
+            pointer-events: none;
+        }
+
         .send-button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -51,38 +57,68 @@
     </style>
 </head>
 
+
 <body>
-    <h1>Escolha um Nome para a Rifa</h1>
+    <h1>Nossa Rifa</h1>
     <div class="grid" id="nameGrid"></div>
-    <button class="send-button" onclick="sendToWhatsApp()">Enviar para WhatsApp</button>
+    <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
 
     <script>
-        const names = ["Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana",
-            "Kleber", "Larissa", "Marcos", "Natália", "Otávio", "Patrícia", "Quintino", "Raquel", "Samuel", "Tatiane",
-            "Ubirajara", "Vânia", "Wagner", "Xuxa", "Yara", "Zaqueu", "Amanda", "Beatriz", "Caio", "Diego", "Eliane", "Fabiano",
-            "Gustavo", "Heloísa", "Isabela", "Joaquim", "Karina", "Leonardo", "Mônica", "Nicolas", "Olívia", "Paulo", "Queila",
-            "Rodrigo", "Simone", "Tiago", "Ulisses", "Vitória", "Wallace", "Xênia", "Yuri", "Zélia", "Alberto", "Bárbara", "Cristiano",
-            "Denise", "Emerson", "Fátima", "Gilberto", "Henrique", "Ivana", "João", "Kelly", "Luiz", "Marta", "Nelson", "Orlando",
-            "Priscila", "Quésia", "Rafael", "Silvana", "Tadeu", "Ursula", "Valter", "Wilma", "Xavier", "Yasmin", "Zuleika", "Anderson",
-            "Bianca", "Celso", "Douglas", "Elaine", "Fernando", "Graça", "Hugo", "Íris", "Jefferson", "Kátia", "Luan", "Márcia",
-            "Nádia", "Osvaldo", "Paula", "Queiroz", "Renato", "Sabrina", "Tânia", "Uelinton", "Vinícius"];
-
-        const grid = document.getElementById("nameGrid");
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwD5HDvXIxSC0qi03wI_7r9pEudUqJ45o4myILpeevm9tJA-9NCnoPplNbZeBw3UdwW2w/exec";
         let selectedNames = [];
 
-        names.forEach(name => {
-            const div = document.createElement("div");
-            div.classList.add("name");
-            div.innerText = name;
-            div.addEventListener("click", () => {
-                if (!selectedNames.includes(name)) {
-                    div.classList.add("selected");
-                    selectedNames.push(name);
-                    marcarNomeNoGoogle(name);
-                }
-            });
-            grid.appendChild(div);
-        });
+        async function fetchNames() {
+            try {
+                const response = await fetch(`${apiUrl}?action=listarNomes`);
+                const names = await response.json();
+                const grid = document.getElementById("nameGrid");
+                grid.innerHTML = ""; // Limpa o grid antes de preencher
+
+                names.forEach(({ nome, comprado }) => {
+                    const div = document.createElement("div");
+                    div.classList.add("name");
+                    div.innerText = nome;
+
+                    if (comprado) {
+                        div.classList.add("sold"); // Cinza para nomes já comprados
+                    } else {
+                        div.addEventListener("click", () => {
+                            if (!selectedNames.includes(nome)) {
+                                div.classList.add("selected");
+                                selectedNames.push(nome);
+                                // marcarNomeNoGoogle(nome);
+                            }
+                        });
+                    }
+                    grid.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Erro ao buscar os nomes da rifa:", error);
+            }
+        }
+
+        async function reservarNomes() {
+            if (selectedNames.length === 0) {
+                alert("Selecione pelo menos um nome para reservar.");
+                return;
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nomes: selectedNames, comprador: 'Hellen' })
+                });
+
+                const result = await response.text();
+                alert(result);
+                selectedNames = [];
+                sendToWhatsApp(); // Enviar para o Whatsapp
+                fetchNames(); // Atualiza a lista após reservar
+            } catch (error) {
+                console.error("Erro ao reservar nomes:", error);
+            }
+        }
 
         function sendToWhatsApp() {
             const phoneNumber = "5511965912874"; // Substitua pelo número desejado
@@ -94,21 +130,25 @@
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappURL, "_blank");
         }
-        async function marcarNomeNoGoogle(nome) {
-            const url = "https://script.google.com/macros/s/AKfycbwhtm0lKWOuhZBkyQhTUqK2C4L1AeUXQO8ezvHEyY4qK0pykxrAZzFVM-0ltMv5_KFsMg/exec";
 
+        async function marcarNomesNoGoogle() {
+            if (selectedNames.length === 0) {
+                alert("Selecione pelo menos um nome para reservar.");
+                return;
+            }
             try {
-                const response = await fetch(`${url}?nome=${encodeURIComponent(nome)}`, {
-                    method: 'POST'
-                });
+                const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
+                const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=Ellen&nomes=${encodeURIComponent(nomesStr)}`);
                 const text = await response.text();
-                alert(text);
-                window.location.reload();  // Atualiza a página
+                sendToWhatsApp();
+                fetchNames();
             } catch (error) {
                 console.error("Erro ao registrar nome:", error);
                 alert("Erro ao registrar nome. Tente novamente.");
             }
         }
+
+        fetchNames();
 
     </script>
 </body>
