@@ -75,15 +75,57 @@
         .hidden {
             display: none;
         }
+
+        .image-container {
+            width: 100%;
+        }
+
+        .image {
+            width: 70%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            /* Centraliza a imagem horizontalmente */
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: red;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            /* Ajusta o espaçamento acima e abaixo do texto */
+            font-size: 24px;
+            z-index: 1000;
+            /* Garante que a barra fique acima de outros elementos */
+        }
+
+        .separator {
+            height: 2px;
+            /* Espessura da linha */
+            background-color: red;
+            /* Cor da linha */
+            margin: 20px 0;
+            /* Espaçamento acima e abaixo da linha */
+        }
     </style>
 </head>
 
 
 <body>
-    <h1>Nossa Rifa</h1>
+    <div class="top-bar">
+        NOSSA RIFA
+    </div>
     <!-- Tela de carregamento -->
     <div id="loadingScreen" class="loading-screen">Aguarde...</div>
-
+    <br /><br /><br /><br />
+    <div class="image-container">
+        <img src="https://m.media-amazon.com/images/I/51USP1yVx+L._AC_SL1000_.jpg" alt="Prêmio" class="image">
+    </div>
+    <div class="separator"></div> <!-- Linha vermelha de separação -->
     <div class="grid" id="nameGrid"></div>
     <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
 
@@ -106,15 +148,19 @@
                     div.innerText = nome;
 
                     if (comprado) {
-                        div.classList.add("sold"); // Cinza para nomes já comprados
+                        div.classList.add("sold");
                     } else {
-                        div.addEventListener("click", () => {
-                            if (!selectedNames.includes(nome)) {
-                                div.classList.add("selected");
+                        div.onclick = function () {
+                            if (selectedNames.includes(nome)) {
+                                // Se já está selecionado, desmarca e remove da lista
+                                selectedNames = selectedNames.filter(n => n !== nome);
+                                div.classList.remove("selected");
+                            } else {
+                                // Se não está selecionado, adiciona à lista e marca como escolhido
                                 selectedNames.push(nome);
-                                // marcarNomeNoGoogle(nome);
+                                div.classList.add("selected");
                             }
-                        });
+                        };
                     }
                     grid.appendChild(div);
                 });
