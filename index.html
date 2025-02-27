@@ -13,7 +13,7 @@
         }
 
         h1 {
-            color: red;
+            color: #faac0e;
         }
 
         .grid {
@@ -27,14 +27,14 @@
 
         .name {
             padding: 10px;
-            border: 2px solid blue;
+            border: 2px solid #0a559b;
             border-radius: 5px;
             background-color: white;
             cursor: pointer;
         }
 
         .selected {
-            background-color: red;
+            background-color: #faac0e;
             color: white;
             pointer-events: none;
         }
@@ -49,7 +49,7 @@
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 16px;
-            background-color: blue;
+            background-color: #0a559b;
             color: white;
             border: none;
             cursor: pointer;
@@ -93,7 +93,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            background-color: red;
+            background-color: #faac0e;
             color: white;
             text-align: center;
             padding: 10px 0;
@@ -106,7 +106,7 @@
         .separator {
             height: 2px;
             /* Espessura da linha */
-            background-color: red;
+            background-color: #faac0e;
             /* Cor da linha */
             margin: 20px 0;
             /* Espaçamento acima e abaixo da linha */
@@ -139,14 +139,17 @@
     <div class="top-bar">
         NOSSA RIFA
     </div>
+
     <!-- Tela de carregamento -->
     <div id="loadingScreen" class="loading-screen">Aguarde...</div>
-    <br /><br /><br /><br />
+    <br /><br />
+    <div class="separator"></div> <!-- Linha vermelha de separação -->
     <div class="image-container">
         <img src="https://m.media-amazon.com/images/I/51USP1yVx+L._AC_SL1000_.jpg" alt="Prêmio" class="image">
     </div>
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <div class="grid" id="nameGrid"></div>
+    <div class="separator"></div> <!-- Linha vermelha de separação -->
     <div class="input-container">
         <input type="text" id="nome" placeholder="Seu nome">
         <input type="text" id="telefone" placeholder="Seu telefone">
