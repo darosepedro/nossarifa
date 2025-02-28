@@ -144,9 +144,16 @@
     <div id="loadingScreen" class="loading-screen">Aguarde...</div>
     <br /><br />
     <div class="separator"></div> <!-- Linha vermelha de separação -->
-    <div class="image-container">
+    <div class="image-container" style="text-align: center; width: 100%;">
         <img src="https://m.media-amazon.com/images/I/51USP1yVx+L._AC_SL1000_.jpg" alt="Prêmio" class="image">
+        <p style="width: 80%; margin: 10px auto; font-size: 16px; font-weight: bold; word-wrap: break-word;
+            line-height: 1.4;">
+            PREMIO<br>
+            Fritadeira Airfryer Digital Philips Walita 4,1L RI925 110V Cor Preta, ou o valor do prêmio em dinheiro, no
+            total de R$ 400,00
+        </p>
     </div>
+
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <div class="grid" id="nameGrid"></div>
     <div class="separator"></div> <!-- Linha vermelha de separação -->
@@ -198,40 +205,17 @@
             }
         }
 
-        async function reservarNomes() {
-            if (selectedNames.length === 0) {
-                alert("Selecione pelo menos um nome para reservar.");
-                return;
-            }
-
-
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ nomes: selectedNames, comprador: 'Hellen' })
-                });
-
-                const result = await response.text();
-                alert(result);
-                selectedNames = [];
-                sendToWhatsApp(); // Enviar para o Whatsapp
-                fetchNames(); // Atualiza a lista após reservar
-            } catch (error) {
-                console.error("Erro ao reservar nomes:", error);
-            }
-        }
-
         function sendToWhatsApp() {
-            const phoneNumber = "5511965912874"; // Substitua pelo número desejado
+            // const phoneNumber = "5511965912874"; // Substitua pelo número desejado
+            const phoneNumber = "5511999094091";
             if (selectedNames.length === 0) {
                 alert("Selecione pelo menos um nome antes de enviar.");
                 return;
             }
-            const message = encodeURIComponent(`Escolhi os seguintes nomes para a rifa: ${selectedNames.map(name => `*${name}*`).join(", ")}`);
+            const message = encodeURIComponent(`Escolhi o(s) seguinte(s) nome(s) para a rifa: ${selectedNames.map(name => `*${name}*`).join(", ")}`);
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappURL, "_blank");
+
         }
 
         async function marcarNomesNoGoogle() {
@@ -256,6 +240,7 @@
                 const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
                 const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&nomes=${encodeURIComponent(nomesStr)}`);
                 const text = await response.text();
+                alert(text);
                 sendToWhatsApp();
                 fetchNames();
             } catch (error) {
