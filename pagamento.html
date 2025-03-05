@@ -28,7 +28,7 @@
             padding: 10px;
             word-wrap: break-word;
             border-radius: 5px;
-            margin-top: 10px;
+            margin: 10px 0;
         }
 
         button {
@@ -36,7 +36,7 @@
             color: white;
             border: none;
             padding: 10px 15px;
-            margin-top: 20px;
+            margin-top: 10px;
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
@@ -45,6 +45,22 @@
         button:hover {
             background-color: #218838;
         }
+
+        #copyBtn {
+            background-color: #007bff;
+            margin-top: 10px;
+        }
+
+        #copyBtn:hover {
+            background-color: #0056b3;
+        }
+
+        #copiedMsg {
+            color: green;
+            font-size: 14px;
+            display: none;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -52,19 +68,21 @@
 
     <div class="container">
         <h2>Reserva realizada com sucesso!</h2>
-        <p>Copie o código PIX abaixo, realize o pagamento no app do seu banco e envie o comprovante ao organizador da
-            rifa.
+        <p>Copie o código abaixo, realize o pagamento no app do seu banco e envie o comprovante ao organizador da rifa.
         </p>
 
         <div class="codigo" id="pixCodigo">Gerando código PIX...</div>
 
-        <button onclick="window.location.href='index.html'">Informar Pagamento</button>
+        <button id="copyBtn">COPIAR CÓDIGO PIX</button>
+        <p id="copiedMsg">Código copiado!</p>
+
+        <button onclick="window.location.href='index.html'">VOLTAR</button>
     </div>
 
     <script>
         function gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor) {
-            const payload = `00020101021126360014br.gov.bcb.pix0114${chavePix}5204000053039865405${valor.toFixed(2).replace('.', '')}5802BR5923${nomeRecebedor}600962070503***6304726C`;
-            return payload; // + calcularCRC16(payload);
+            const payload = `00020126580014BR.GOV.BCB.PIX0136${chavePix}5204000053039865404${valor.toFixed(2).replace('.', '')}5802BR5925${nomeRecebedor}6009${cidade}62070503***6304`;
+            return payload + calcularCRC16(payload);
         }
 
         function calcularCRC16(payload) {
@@ -84,15 +102,23 @@
         const valor = parseFloat(params.get('valor')) || 0;
 
         // Dados do PIX (troque pela sua chave e informações reais)
-        const chavePix = "+5511942064628";
-        const nomeRecebedor = "PEDRO M L DO NASCIMENTO";
-        const cidade = "EMBUGUACU";
-
-
+        const chavePix = "chavepix@exemplo.com";
+        const nomeRecebedor = "Pedro Nascimento";
+        const cidade = "Sao Paulo";
 
         // Gera e exibe o código PIX
         const codigoPix = gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor);
         document.getElementById("pixCodigo").innerText = codigoPix;
+
+        // Função para copiar o código PIX
+        document.getElementById("copyBtn").addEventListener("click", function () {
+            navigator.clipboard.writeText(codigoPix).then(() => {
+                document.getElementById("copiedMsg").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("copiedMsg").style.display = "none";
+                }, 2000);
+            });
+        });
     </script>
 
 </body>
