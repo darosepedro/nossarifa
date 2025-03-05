@@ -219,6 +219,9 @@
         }
 
         async function marcarNomesNoGoogle() {
+            const loadingScreen = document.getElementById("loadingScreen");
+            loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
+
             if (selectedNames.length === 0) {
                 alert("Selecione pelo menos um nome para reservar.");
                 return;
@@ -248,6 +251,8 @@
             } catch (error) {
                 console.error("Erro ao registrar nome:", error);
                 alert("Erro ao registrar nome. Tente novamente.");
+            } finally {
+                loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
         }
 
