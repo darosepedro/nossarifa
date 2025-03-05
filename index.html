@@ -255,6 +255,7 @@
                 console.error("Erro ao registrar nome:", error);
                 alert("Erro ao registrar nome. Tente novamente.");
             } finally {
+                selectedNames = [];
                 loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
         }
