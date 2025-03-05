@@ -242,7 +242,7 @@
                 const text = await response.text();
                 alert(text);
                 sendToWhatsApp();
-                fetchNames();
+                window.location.href = `pagamento.html?valor=${valor}`;
             } catch (error) {
                 console.error("Erro ao registrar nome:", error);
                 alert("Erro ao registrar nome. Tente novamente.");
