@@ -81,7 +81,7 @@
 
     <script>
         function gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor) {
-            const payload = `00020126360014br.gov.bcb.pix0114+55${chavePix}5204000053039865405${valor.toFixed(2)}5802BR5925${nomeRecebedor}6009${cidade}62070503***6304`;
+            const pauload = `00020101021126360014br.gov.bcb.pix0114+55${chavePix}5204000053039865405${valor.toFixed(2)}5802BR5923${nomeRecebedor}6009${cidade}62070503***6304`;
             return payload + calcularCRC16(payload);
         }
 
