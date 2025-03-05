@@ -81,7 +81,7 @@
 
     <script>
         function gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor) {
-            const payload = `00020126580014BR.GOV.BCB.PIX0136${chavePix}5204000053039865404${valor.toFixed(2).replace('.', '')}5802BR5925${nomeRecebedor}6009${cidade}62070503***6304`;
+            const payload = `00020126580014BR.GOV.BCB.PIX0136${chavePix}5204000053039865404${valor.toFixed(2)}5802BR5925${nomeRecebedor}6009${cidade}62070503***6304`;
             return payload + calcularCRC16(payload);
         }
 
@@ -102,9 +102,9 @@
         const valor = parseFloat(params.get('valor')) || 0;
 
         // Dados do PIX (troque pela sua chave e informações reais)
-        const chavePix = "chavepix@exemplo.com";
-        const nomeRecebedor = "Pedro Nascimento";
-        const cidade = "Sao Paulo";
+        const chavePix = "+5511942064628";
+        const nomeRecebedor = "PEDRO M L DO NASCIMENTO";
+        const cidade = "EMBUGUACU";
 
         // Gera e exibe o código PIX
         const codigoPix = gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor);
