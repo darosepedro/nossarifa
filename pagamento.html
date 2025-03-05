@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento da Rifa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .codigo {
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            word-wrap: break-word;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Reserva realizada com sucesso!</h2>
+        <p>Copie o código abaixo, realize o pagamento no app do seu banco e envie o comprovante ao organizador da rifa.
+        </p>
+
+        <div class="codigo" id="pixCodigo">Gerando código PIX...</div>
+
+        <button onclick="window.location.href='index.html'">PAGAMENTO REALIZADO</button>
+    </div>
+
+    <script>
+        function gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor) {
+            const payload = `00020101021126360014br.gov.bcb.pix0114${chavePix}5204000053039865405${valor.toFixed(2).replace('.', '')}5802BR5923${nomeRecebedor}600962070503***6304726C`;
+            return payload + calcularCRC16(payload);
+        }
+
+        function calcularCRC16(payload) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < payload.length; i++) {
+                crc ^= payload.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+                    else crc <<= 1;
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Obtém o valor passado como parâmetro na URL (ex: pagamento.html?valor=10)
+        const params = new URLSearchParams(window.location.search);
+        const valor = parseFloat(params.get('valor')) || 0;
+
+        // Dados do PIX (troque pela sua chave e informações reais)
+        const chavePix = "+5511942064628";
+        const nomeRecebedor = "PEDRO M L DO NASCIMENTO";
+        const cidade = "EMBUGUACU";
+
+
+
+        // Gera e exibe o código PIX
+        const codigoPix = gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor);
+        document.getElementById("pixCodigo").innerText = codigoPix;
+    </script>
+
+</body>
+
+</html>
