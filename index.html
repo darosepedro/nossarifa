@@ -239,9 +239,9 @@
             try {
                 const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
                 const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&nomes=${encodeURIComponent(nomesStr)}`);
-                const text = await response.text();
-                alert(text);
-                sendToWhatsApp();
+                // const text = await response.text();
+                // alert(text);
+                // sendToWhatsApp();
                 window.location.href = `pagamento.html?valor=${valor}`;
             } catch (error) {
                 console.error("Erro ao registrar nome:", error);
