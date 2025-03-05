@@ -52,18 +52,19 @@
 
     <div class="container">
         <h2>Reserva realizada com sucesso!</h2>
-        <p>Copie o código abaixo, realize o pagamento no app do seu banco e envie o comprovante ao organizador da rifa.
+        <p>Copie o código PIX abaixo, realize o pagamento no app do seu banco e envie o comprovante ao organizador da
+            rifa.
         </p>
 
         <div class="codigo" id="pixCodigo">Gerando código PIX...</div>
 
-        <button onclick="window.location.href='index.html'">PAGAMENTO REALIZADO</button>
+        <button onclick="window.location.href='index.html'">Informar Pagamento</button>
     </div>
 
     <script>
         function gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor) {
             const payload = `00020101021126360014br.gov.bcb.pix0114${chavePix}5204000053039865405${valor.toFixed(2).replace('.', '')}5802BR5923${nomeRecebedor}600962070503***6304726C`;
-            return payload + calcularCRC16(payload);
+            return payload; // + calcularCRC16(payload);
         }
 
         function calcularCRC16(payload) {
@@ -93,6 +94,10 @@
         const codigoPix = gerarPixCopiaCola(chavePix, nomeRecebedor, cidade, valor);
         document.getElementById("pixCodigo").innerText = codigoPix;
     </script>
+
+</body>
+
+</html>
 
 </body>
 
