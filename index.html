@@ -242,6 +242,8 @@
                 // const text = await response.text();
                 // alert(text);
                 // sendToWhatsApp();
+                var valor = selectedNames.length * 10;
+                console.info(valor);
                 window.location.href = `pagamento.html?valor=${valor}`;
             } catch (error) {
                 console.error("Erro ao registrar nome:", error);
