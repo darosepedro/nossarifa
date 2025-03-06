@@ -163,11 +163,12 @@
     <div class="input-container">
         <input type="text" id="nome" placeholder="Seu nome">
         <input type="text" id="telefone" placeholder="Seu telefone">
+        <input type="text" id="vendedor" placeholder="Nome Vendedor">
     </div>
     <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbx4Lr1dQ0OaqmJGdDcn0tLKupIYvgvhCiQYS_g5UpVheAG1h9grDHVe4q-eerrK7PgerQ/exec";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwpOiJCu3fC8QK5hFjdbmNqMzS2wnt4QHYOulzuE5FNrX29sFxY4qmaBV6TWFpgRmIp3A/exec";
         let selectedNames = [];
 
         async function fetchNames() {
@@ -242,9 +243,15 @@
                 return;
             }
 
+            const telefone = document.getElementById("vendedor").value;
+            if (vendedor === '') {
+                alert("Informe o Vendedor.");
+                return;
+            }
+
             try {
                 const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
-                const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&nomes=${encodeURIComponent(nomesStr)}`);
+                const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&nomes=${encodeURIComponent(nomesStr)}`);
                 // const text = await response.text();
                 // alert(text);
                 // sendToWhatsApp();
