@@ -63,39 +63,42 @@
     </div>
 
     <script>
-      const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
-      
-      const response = await fetch(`${apiUrl}?action=listarVendas`);
-      const dados = await response.json();
+        const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
 
-      const vendasPorVendedor = {};
-      let totalVendidos = 0;
-      
-      dados.vendidos.forEach(({ vendedor, vendas, comissaoUnitaria }) => {
-          if (!vendasPorVendedor[vendedor]) {
-              vendasPorVendedor[vendedor] = { vendas: 0, comissao: 0, percentual: 0 };
-          }
-          vendasPorVendedor[vendedor].vendas += vendas;
-          vendasPorVendedor[vendedor].comissao += vendas * comissaoUnitaria;
-          vendasPorVendedor[vendedor].percentual = (vendas / dados.qtdeTotal) * 100;
-          totalVendidos += vendas;
-      });
-
-      const tabela = document.getElementById("tabela-vendedores");
-      Object.keys(vendasPorVendedor).forEach(vendedor => {
-          const { vendas, comissao, percentual } = vendasPorVendedor[vendedor];
-          const row = `<tr><td>${vendedor}</td><td>${vendas}</td><td>R$ ${comissao.toFixed(2)}</td><td>${percentual.toFixed(1)}%</td></tr>`;
-          tabela.innerHTML += row;
-      });
-      
-      const percentualVendidos = (totalVendidos / dados.qtdeTotal) * 100;
-      const percentualDisponivel = 100 - percentualVendidos;
-      
-      document.getElementById("barra-vendidos").style.width = percentualVendidos + "%";
-      document.getElementById("barra-vendidos").textContent = percentualVendidos.toFixed(1) + "%";
-      
-      document.getElementById("barra-disponivel").style.width = percentualDisponivel + "%";
-      document.getElementById("barra-disponivel").textContent = percentualDisponivel.toFixed(1) + "%";
+        async function fetchVendas() {
+              const response = await fetch(`${apiUrl}?action=listarVendas`);
+              const dados = await response.json();
+        
+              const vendasPorVendedor = {};
+              let totalVendidos = 0;
+              
+              dados.vendidos.forEach(({ vendedor, vendas, comissaoUnitaria }) => {
+                  if (!vendasPorVendedor[vendedor]) {
+                      vendasPorVendedor[vendedor] = { vendas: 0, comissao: 0, percentual: 0 };
+                  }
+                  vendasPorVendedor[vendedor].vendas += vendas;
+                  vendasPorVendedor[vendedor].comissao += vendas * comissaoUnitaria;
+                  vendasPorVendedor[vendedor].percentual = (vendas / dados.qtdeTotal) * 100;
+                  totalVendidos += vendas;
+              });
+        
+              const tabela = document.getElementById("tabela-vendedores");
+              Object.keys(vendasPorVendedor).forEach(vendedor => {
+                  const { vendas, comissao, percentual } = vendasPorVendedor[vendedor];
+                  const row = `<tr><td>${vendedor}</td><td>${vendas}</td><td>R$ ${comissao.toFixed(2)}</td><td>${percentual.toFixed(1)}%</td></tr>`;
+                  tabela.innerHTML += row;
+              });
+              
+              const percentualVendidos = (totalVendidos / dados.qtdeTotal) * 100;
+              const percentualDisponivel = 100 - percentualVendidos;
+              
+              document.getElementById("barra-vendidos").style.width = percentualVendidos + "%";
+              document.getElementById("barra-vendidos").textContent = percentualVendidos.toFixed(1) + "%";
+              
+              document.getElementById("barra-disponivel").style.width = percentualDisponivel + "%";
+              document.getElementById("barra-disponivel").textContent = percentualDisponivel.toFixed(1) + "%";
+        }
+        fetchVendas();
     </script>
 </body>
 </html>
