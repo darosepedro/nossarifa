@@ -1,31 +1,102 @@
-function doGet() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("RifaNomes");
-  var data = sheet.getRange("E1:E100").getValues().flat();
-  var qtdeTotal = 100;
-  var vendasPorVendedor = {};
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendas por Vendedor</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .barra-container {
+            width: 50%;
+            margin: 20px auto;
+            background-color: #ddd;
+            height: 30px;
+            display: flex;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .vendidos {
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        .disponivel {
+            background-color: #f44336;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align: center;">Vendas por Vendedor</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Vendedor</th>
+                <th>Vendas</th>
+                <th>Comissão</th>
+                <th>Percentual</th>
+            </tr>
+        </thead>
+        <tbody id="tabela-vendedores">
+            <!-- Os dados serão inseridos aqui via JavaScript -->
+        </tbody>
+    </table>
+    
+    <div class="barra-container">
+        <div id="barra-vendidos" class="vendidos"></div>
+        <div id="barra-disponivel" class="disponivel"></div>
+    </div>
 
-  data.forEach(function(vendedor) {
-    if (vendedor) {
-      if (!vendasPorVendedor[vendedor]) {
-        vendasPorVendedor[vendedor] = 0;
-      }
-      vendasPorVendedor[vendedor]++;
-    }
-  });
+    <script>
+      const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
+      
+      const response = await fetch(`${apiUrl}?action=listarVendas`);
+      const dados = await response.json();
 
-  var vendidos = Object.keys(vendasPorVendedor).map(function(vendedor) {
-    return {
-      vendedor: vendedor,
-      vendas: vendasPorVendedor[vendedor],
-      comissaoUnitaria: 2 // Supondo comissão fixa
-    };
-  });
+      const vendasPorVendedor = {};
+      let totalVendidos = 0;
+      
+      dados.vendidos.forEach(({ vendedor, vendas, comissaoUnitaria }) => {
+          if (!vendasPorVendedor[vendedor]) {
+              vendasPorVendedor[vendedor] = { vendas: 0, comissao: 0, percentual: 0 };
+          }
+          vendasPorVendedor[vendedor].vendas += vendas;
+          vendasPorVendedor[vendedor].comissao += vendas * comissaoUnitaria;
+          vendasPorVendedor[vendedor].percentual = (vendas / dados.qtdeTotal) * 100;
+          totalVendidos += vendas;
+      });
 
-  var response = {
-    qtdeTotal: qtdeTotal,
-    vendidos: vendidos
-  };
+      const tabela = document.getElementById("tabela-vendedores");
+      Object.keys(vendasPorVendedor).forEach(vendedor => {
+          const { vendas, comissao, percentual } = vendasPorVendedor[vendedor];
+          const row = `<tr><td>${vendedor}</td><td>${vendas}</td><td>R$ ${comissao.toFixed(2)}</td><td>${percentual.toFixed(1)}%</td></tr>`;
+          tabela.innerHTML += row;
+      });
+      
+      const percentualVendidos = (totalVendidos / dados.qtdeTotal) * 100;
+      const percentualDisponivel = 100 - percentualVendidos;
+      
+      document.getElementById("barra-vendidos").style.width = percentualVendidos + "%";
+      document.getElementById("barra-vendidos").textContent = percentualVendidos.toFixed(1) + "%";
+      
+      document.getElementById("barra-disponivel").style.width = percentualDisponivel + "%";
+      document.getElementById("barra-disponivel").textContent = percentualDisponivel.toFixed(1) + "%";
+    </script>
+</body>
+</html>
 
-  return ContentService.createTextOutput(JSON.stringify(response))
-    .setMimeType(ContentService.MimeType.JSON);
-}
