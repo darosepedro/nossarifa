@@ -1,0 +1,31 @@
+function doGet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("RifaNomes");
+  var data = sheet.getRange("E1:E100").getValues().flat();
+  var qtdeTotal = 100;
+  var vendasPorVendedor = {};
+
+  data.forEach(function(vendedor) {
+    if (vendedor) {
+      if (!vendasPorVendedor[vendedor]) {
+        vendasPorVendedor[vendedor] = 0;
+      }
+      vendasPorVendedor[vendedor]++;
+    }
+  });
+
+  var vendidos = Object.keys(vendasPorVendedor).map(function(vendedor) {
+    return {
+      vendedor: vendedor,
+      vendas: vendasPorVendedor[vendedor],
+      comissaoUnitaria: 2 // Supondo comissão fixa
+    };
+  });
+
+  var response = {
+    qtdeTotal: qtdeTotal,
+    vendidos: vendidos
+  };
+
+  return ContentService.createTextOutput(JSON.stringify(response))
+    .setMimeType(ContentService.MimeType.JSON);
+}
