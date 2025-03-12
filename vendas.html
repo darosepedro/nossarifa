@@ -71,7 +71,8 @@
         
               const vendasPorVendedor = {};
               let totalVendidos = 0;
-              
+
+              dados.vendidos.sort((a, b) => b.vendas - a.vendas); // Ordena em ordem decrescente
               dados.vendidos.forEach(({ vendedor, vendas, comissaoUnitaria }) => {
                   if (!vendasPorVendedor[vendedor]) {
                       vendasPorVendedor[vendedor] = { vendas: 0, comissao: 0, percentual: 0 };
