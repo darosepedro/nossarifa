@@ -192,6 +192,16 @@
         const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
         let selectedNames = [];
 
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function preencherVendedor() {
+            const vendedor = getQueryParam("vendedor") || "";
+            document.getElementById("vendedor").value = vendedor;
+        }
+        
         async function fetchNames() {
             const loadingScreen = document.getElementById("loadingScreen");
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
@@ -288,6 +298,8 @@
                 loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
         }
+
+        preencherVendedor();
 
         fetchNames();
 
