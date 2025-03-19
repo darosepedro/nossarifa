@@ -24,6 +24,36 @@
             margin: auto;
         }
 
+        .tabs {
+            display: flex;
+            width: 100%;
+            border-bottom: 2px solid #d3d3d3;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background-color: #d3d3d3;
+            color: black;
+
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            font-size: 16px;
+        }
+
+        .tab-button.active {
+            background-color: #faac0e;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .name {
             padding: 10px;
@@ -151,6 +181,20 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+
+        .buyer-list {
+            text-align: left;
+            margin: auto;
+            max-width: 400px;
+        }
+
+        .buyer-item {
+            background: #ffffff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 
@@ -178,18 +222,46 @@
     </div>
 
     <div class="separator"></div> <!-- Linha vermelha de separação -->
-    <div class="grid" id="nameGrid"></div>
-    <div class="separator"></div> <!-- Linha vermelha de separação -->
-    <div class="input-container">
-        <input type="text" id="nome" placeholder="Seu nome">
-        <input type="text" id="telefone" placeholder="Seu telefone">
-        <input type="text" id="vendedor" placeholder="Nome Vendedor">
+
+    <div class="tabs">
+        <button class="tab-button active" onclick="changeTab('cartela')">CARTELA</button>
+        <button class="tab-button" onclick="changeTab('compradores')">COMPRADORES</button>
+        <div class="separator"></div> <!-- Linha vermelha de separação -->
     </div>
-    <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
+
+    <div id="cartela" class="tab-content active">
+        <br>
+        <div class="grid" id="nameGrid"></div>
+        <div class="input-container">
+            <input type="text" id="nome" placeholder="Seu nome">
+            <input type="text" id="telefone" placeholder="Seu telefone">
+            <input type="text" id="vendedor" placeholder="Nome Vendedor">
+        </div>
+        <button class="send-button" onclick="marcarNomesNoGoogle()">RESERVAR</button>
+    </div>
+
+    <div id="compradores" class="tab-content">
+        <div class="buyer-list" id="buyerList"></div>
+    </div>
+
+
+
+
+
+
+
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <script>
         const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
         let selectedNames = [];
+
+        function changeTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`button[onclick="changeTab('${tab}')"]`).classList.add('active');
+            document.getElementById(tab).classList.add('active');
+        }
 
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -200,7 +272,7 @@
             const vendedor = getQueryParam("vendedor") || "";
             document.getElementById("vendedor").value = vendedor;
         }
-        
+
         async function fetchNames() {
             const loadingScreen = document.getElementById("loadingScreen");
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
@@ -209,6 +281,8 @@
                 const names = await response.json();
                 const grid = document.getElementById("nameGrid");
                 grid.innerHTML = ""; // Limpa o grid antes de preencher
+
+                const buyerMap = {};
 
                 names.forEach(({ nome, comprado, comprador, pago }) => {
                     const div = document.createElement("div");
@@ -232,7 +306,24 @@
                     }
 
                     grid.appendChild(div);
+
+                    if (comprado) {
+                        if (!buyerMap[comprador]) {
+                            buyerMap[comprador] = [];
+                        }
+                        buyerMap[comprador].push(nome);
+                    }
                 });
+
+                const buyerList = document.getElementById("buyerList");
+                buyerList.innerHTML = "";
+                Object.keys(buyerMap).forEach(comprador => {
+                    const div = document.createElement("div");
+                    div.classList.add("buyer-item");
+                    div.innerHTML = `<strong>${comprador}</strong>: ${buyerMap[comprador].join(", ")}`;
+                    buyerList.appendChild(div);
+                });
+
             } catch (error) {
                 console.error("Erro ao buscar os nomes da rifa:", error);
             } finally {
