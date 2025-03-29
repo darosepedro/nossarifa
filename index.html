@@ -273,7 +273,7 @@
 
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbykbdRDCsjtFczoXKzXEpdgpgEcTHg_ZeqKXfUiu_xW9IRVT8HHtjy0PoUHYHDNXvRmiw/exec";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbz1mL1bhkUTncvmvXApSw1G0IwmVPo2yCsnGMXGC6wt4kTlh2qg4MydS2e2NABxfdcdOw/exec";
         let selectedNames = [];
 
         function changeTab(tab) {
@@ -299,29 +299,30 @@
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
             try {
                 const response = await fetch(`${apiUrl}?action=listarNomes`);
-                const names = await response.json();
+                const dadosConcurso = await response.json();
+                const apostas = await dadosConcurso.apostas;
                 const grid = document.getElementById("nameGrid");
                 grid.innerHTML = ""; // Limpa o grid antes de preencher
 
                 const buyerMap = {};
                 const paymentsMap = {};
 
-                names.forEach(({ nome, comprado, comprador, pago }) => {
+                apostas.forEach(({ lotes, comprado, comprador, pago }) => {
                     const div = document.createElement("div");
                     div.classList.add("name");
-                    div.innerText = nome;
+                    div.innerText = lotes;
 
                     if (pago) {
                         div.classList.add("paid"); // Indicação de pago
-                    } else if (comprado) {
+                    } else if (comprador !== "") {
                         div.classList.add("sold"); // Indicação de vendido, mas não pago
                     } else {
                         div.onclick = function () {
-                            if (selectedNames.includes(nome)) {
-                                selectedNames = selectedNames.filter(n => n !== nome);
+                            if (selectedNames.includes(lotes)) {
+                                selectedNames = selectedNames.filter(n => n !== lotes);
                                 div.classList.remove("selected");
                             } else {
-                                selectedNames.push(nome);
+                                selectedNames.push(lotes);
                                 div.classList.add("selected");
                             }
                         };
@@ -334,7 +335,7 @@
                             buyerMap[comprador] = [];
                             paymentsMap[comprador] = [];
                         }
-                        buyerMap[comprador].push(nome);
+                        buyerMap[comprador].push(lotes);
                         paymentsMap[comprador].push(pago);
                     }
                 });
@@ -373,7 +374,7 @@
                 alert("Selecione pelo menos um nome antes de enviar.");
                 return;
             }
-            const message = encodeURIComponent(`Escolhi o(s) seguinte(s) nome(s) para a rifa: ${selectedNames.map(name => `*${name}*`).join(", ")}`);
+            const message = encodeURIComponent(`Escolhi o(s) seguinte(s) nome(s) para a rifa: ${selectedNames.map(lotes => `*${lotes}*`).join(", ")}`);
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappURL, "_blank");
 
