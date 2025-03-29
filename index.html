@@ -209,6 +209,21 @@
             font-size: 14px;
             text-align: center;
         }
+        
+        .prize-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .currency {
+            font-size: 32px;
+            font-weight: bold;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            color: #0a559b;
+        }
+        
         .prize {
             font-size: 64px; /* Letras gigantes */
             background-color: #0a559b;
@@ -235,7 +250,8 @@
     <div id="loadingScreen" class="loading-screen">Aguarde...</div>
     <br><br><br>
     <div class="image-container" style="text-align: center; width: 100%;">
-        <div>
+        <div class="prize-container">
+            <span class="currency">R$</span>
             <span class="prize">500,00</span><br>
             <p class="price">Preço por Lote: R$ 10,00</p>
         </div>
