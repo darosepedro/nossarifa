@@ -317,6 +317,10 @@
             try {
                 const response = await fetch(`${apiUrl}?action=listarNomes`);
                 const dadosConcurso = await response.json();
+                document.getElementById("prize-value").textContent = dadosConcurso.valor_premio.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
                 const apostas = await dadosConcurso.apostas;
                 const grid = document.getElementById("nameGrid");
                 grid.innerHTML = ""; // Limpa o grid antes de preencher
