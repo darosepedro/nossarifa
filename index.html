@@ -290,7 +290,8 @@
 
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbxe9z-ZqGcW8rl30mJWbGyFkYUY6Kodxg2z1ydwvFedymzF7w_tiYDn-LEQgQS1JjMmmA/exec";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbwdgc1QVSpVSfmqPp8iHB141YzZG3jdms02Rj6BvmoelnzJjDfYEjAhEAx40b1nO63n6g/exec";
+                        
         let selectedNames = [];
 
         function changeTab(tab) {
@@ -315,7 +316,7 @@
             const loadingScreen = document.getElementById("loadingScreen");
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
             try {
-                const response = await fetch(`${apiUrl}?concurso=1`);
+                const response = await fetch(`${apiUrl}?concurso=1&acao=buscar-cartela`);
                 const dadosConcurso = await response.json();
                 document.getElementById("prize-value").textContent = dadosConcurso.valor_premio.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
@@ -382,7 +383,7 @@
                 });
 
             } catch (error) {
-                console.error("Erro ao buscar os nomes da rifa:", error);
+                console.error("Erro ao buscar os lotes da rifa:", error);
             } finally {
                 loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
@@ -430,7 +431,7 @@
 
             try {
                 const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
-                const response = await fetch(`${apiUrl}?action=reservarNomes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&nomes=${encodeURIComponent(nomesStr)}`);
+                const response = await fetch(`${apiUrl}?acao=reservar-lotes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&nomes=${encodeURIComponent(nomesStr)}`);
                 // const text = await response.text();
                 // alert(text);
                 // sendToWhatsApp();
