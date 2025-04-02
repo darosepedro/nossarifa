@@ -431,7 +431,7 @@
 
             try {
                 const lotesStr = selectedLotes.join("|"); // Concatena os nomes com "|"
-                const response = await fetch(`${apiUrl}?acao=reservar-lotes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&lotes=${encodeURIComponent(lotesStr)}`);
+                const response = await fetch(`${apiUrl}?concurso=1&acao=reservar-lotes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&lotes=${encodeURIComponent(lotesStr)}`);
                 // const text = await response.text();
                 // alert(text);
                 // sendToWhatsApp();
