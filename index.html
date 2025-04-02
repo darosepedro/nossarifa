@@ -290,7 +290,7 @@
 
     <div class="separator"></div> <!-- Linha vermelha de separação -->
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwdgc1QVSpVSfmqPp8iHB141YzZG3jdms02Rj6BvmoelnzJjDfYEjAhEAx40b1nO63n6g/exec";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxn46UiK9H3RywlvUm-6fnBMsqz3AmT-KMuJ2A4tSanxhr8FB5q22O1rG9xG_8VqebGAA/exec";
                         
         let selectedNames = [];
 
@@ -430,12 +430,12 @@
             }
 
             try {
-                const nomesStr = selectedNames.join("|"); // Concatena os nomes com "|"
-                const response = await fetch(`${apiUrl}?acao=reservar-lotes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&nomes=${encodeURIComponent(nomesStr)}`);
+                const lotesStr = selectedLotes.join("|"); // Concatena os nomes com "|"
+                const response = await fetch(`${apiUrl}?acao=reservar-lotes&comprador=${encodeURIComponent(comprador)}&telefone=${encodeURIComponent(telefone)}&vendedor=${encodeURIComponent(vendedor)}&lotes=${encodeURIComponent(lotesStr)}`);
                 // const text = await response.text();
                 // alert(text);
                 // sendToWhatsApp();
-                var valor = selectedNames.length * 10;
+                var valor = selectedLotes.length * 10;
                 console.info(valor);
                 window.location.href = `pagamento.html?valor=${valor}`;
             } catch (error) {
