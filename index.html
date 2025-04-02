@@ -315,7 +315,7 @@
             const loadingScreen = document.getElementById("loadingScreen");
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
             try {
-                const response = await fetch(`${apiUrl}?action=listarNomes`);
+                const response = await fetch(`${apiUrl}?concurso=1`);
                 const dadosConcurso = await response.json();
                 document.getElementById("prize-value").textContent = dadosConcurso.valor_premio.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
