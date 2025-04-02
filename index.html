@@ -292,7 +292,7 @@
     <script>
         const apiUrl = "https://script.google.com/macros/s/AKfycbxn46UiK9H3RywlvUm-6fnBMsqz3AmT-KMuJ2A4tSanxhr8FB5q22O1rG9xG_8VqebGAA/exec";
                         
-        let selectedNames = [];
+        let selectedLotes = [];
 
         function changeTab(tab) {
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
@@ -340,11 +340,11 @@
                         div.classList.add("sold"); // Indicação de vendido, mas não pago
                     } else {
                         div.onclick = function () {
-                            if (selectedNames.includes(lotes)) {
-                                selectedNames = selectedNames.filter(n => n !== lotes);
+                            if (selectedLotes.includes(lotes)) {
+                                selectedLotes = selectedLotes.filter(n => n !== lotes);
                                 div.classList.remove("selected");
                             } else {
-                                selectedNames.push(lotes);
+                                selectedLotes.push(lotes);
                                 div.classList.add("selected");
                             }
                         };
@@ -392,11 +392,11 @@
         function sendToWhatsApp() {
             // const phoneNumber = "5511965912874"; // Substitua pelo número desejado
             const phoneNumber = "5511999094091";
-            if (selectedNames.length === 0) {
+            if (selectedLotes.length === 0) {
                 alert("Selecione pelo menos um nome antes de enviar.");
                 return;
             }
-            const message = encodeURIComponent(`Escolhi o(s) seguinte(s) nome(s) para a rifa: ${selectedNames.map(lotes => `*${lotes}*`).join(", ")}`);
+            const message = encodeURIComponent(`Escolhi o(s) seguinte(s) nome(s) para a rifa: ${selectedLotes.map(lotes => `*${lotes}*`).join(", ")}`);
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
             window.open(whatsappURL, "_blank");
 
@@ -406,7 +406,7 @@
             const loadingScreen = document.getElementById("loadingScreen");
             loadingScreen.classList.remove("hidden"); // Exibe a mensagem "Aguarde..."
 
-            if (selectedNames.length === 0) {
+            if (selectedLotes.length === 0) {
                 alert("Selecione pelo menos um nome para reservar.");
                 return;
             }
@@ -442,7 +442,7 @@
                 console.error("Erro ao registrar nome:", error);
                 alert("Erro ao registrar nome. Tente novamente.");
             } finally {
-                selectedNames = [];
+                selectedLotes = [];
                 loadingScreen.classList.add("hidden"); // Esconde a mensagem "Aguarde..."
             }
         }
